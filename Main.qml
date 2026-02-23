@@ -88,6 +88,43 @@ Window {
             }
         }
 
+        // 2. Custom Handle (The Red Needle and Center Cap)
+        handle: Item {
+            id: dialHandle
+            x: speedometer.background.x + speedometer.background.width / 2 - width / 2
+            y: speedometer.background.y + speedometer.background.height / 2 - height / 2
+            width: 20
+            height: speedometer.height
+
+            // The Dial control automatically calculates the correct visual angle for us
+            rotation: speedometer.angle
+
+            // Red Needle
+            Rectangle {
+                id: needle
+                anchors.bottom: parent.verticalCenter
+                anchors.bottomMargin: -15 // Let it overlap the center cap slightly
+                anchors.horizontalCenter: parent.horizontalCenter
+                height: speedometer.height * 0.45
+                width: 6
+                color: "#e74c3c" // A nice automotive red
+                antialiasing: true
+                radius: 3
+            }
+
+            // Grey Center Pivot Cap
+            Rectangle {
+                anchors.centerIn: parent
+                width: 32
+                height: 32
+                radius: 16
+                color: "#7f8c8d"
+                border.color: "#333333"
+                border.width: 2
+            }
+        }
+
+
         Component.onCompleted: forceActiveFocus()
     }
 
