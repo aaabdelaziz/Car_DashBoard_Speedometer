@@ -124,6 +124,27 @@ Window {
             }
         }
 
+        // 3. Digital Speed Readout
+        Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 50
+
+            // Math.round keeps the text clean from decimals
+            text: Math.round(speedometer.value)
+            color: "white"
+            font.pixelSize: 42
+            font.bold: true
+
+            // Optional: Add "km/h" or "mph" label underneath
+            Text {
+                anchors.top: parent.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "km/h"
+                color: "#7f8c8d"
+                font.pixelSize: 16
+            }
+        }
 
         Component.onCompleted: forceActiveFocus()
     }
