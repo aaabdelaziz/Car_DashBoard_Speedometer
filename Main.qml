@@ -36,15 +36,27 @@ Window {
 
         // --- KEYBOARD CONTROLS ---
         // When the Up arrow is pressed, turn acceleration ON
-        Keys.onUpPressed: {
-            acceleration = true
+        // added 'braking' and switched to the stricter 'Keys.onPressed'
+        property bool acceleration: false
+        property bool braking: false
+
+        Keys.onPressed: (event) => {
+            if (event.key === Qt.Key_Up) {
+                acceleration = true
+                event.accepted = true // Strict override: Stops the Dial from intercepting
+            } else if (event.key === Qt.Key_Down) {
+                braking = true
+                event.accepted = true
+            }
         }
 
-        // When the Up arrow is let go, turn acceleration OFF
         Keys.onReleased: (event) => {
             if (event.key === Qt.Key_Up) {
                 acceleration = false
-                event.accepted = true // Tells Qt we've handled this key event
+                event.accepted = true
+            } else if (event.key === Qt.Key_Down) {
+                braking = false
+                event.accepted = true
             }
         }
 
@@ -158,18 +170,21 @@ Window {
         // --- 3. PHYSICS & TIMING ENGINE ---
         // This timer acts as our "game loop", firing every 30 milliseconds
         Timer {
-            interval: 30
+            interval: 16 // ~60 FPS for instant visual feedback
             running: true
             repeat: true
             onTriggered: {
-                // If accelerating AND we haven't hit the top speed yet
                 if (speedometer.acceleration && speedometer.value < speedometer.to) {
-                    speedometer.value += 1.5 // Increase speed
+                    speedometer.value += 1.2 // Faster acceleration
+                } else if (speedometer.braking && speedometer.value > speedometer.from) {
+                    speedometer.value -= 2.5 // Hard braking
+                } else if (!speedometer.acceleration && speedometer.value > speedometer.from) {
+                    speedometer.value -= 0.3 // Smooth coasting
                 }
-                // If NOT accelerating AND we are above zero
-                else if (!speedometer.acceleration && speedometer.value > speedometer.from) {
-                    speedometer.value -= 1   // Coast/slow down automatically
-                }
+
+                // Safety catch to ensure we don't accidentally go below 0 or above 180
+                if (speedometer.value < 0) speedometer.value = 0;
+                else if (speedometer.value > 180) speedometer.value = 180;
             }
         }
 
