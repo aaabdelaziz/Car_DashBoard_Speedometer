@@ -31,9 +31,6 @@ Window {
         // 'focus' must be true for this component to listen to keyboard presses
         focus: true
 
-        // Custom property to track if the user is holding the "gas pedal" (Up Arrow)
-        property bool acceleration: false
-
         // --- KEYBOARD CONTROLS ---
         // When the Up arrow is pressed, turn acceleration ON
         // added 'braking' and switched to the stricter 'Keys.onPressed'
@@ -57,16 +54,6 @@ Window {
             } else if (event.key === Qt.Key_Down) {
                 braking = false
                 event.accepted = true
-            }
-        }
-
-        // --- SMOOTHING ANIMATION ---
-        // Whenever the 'value' property changes, smoothly animate the transition
-        // rather than snapping instantly to the new number.
-        Behavior on value {
-            NumberAnimation {
-                duration: 500
-                easing.type: Easing.InOutQuad // Starts and ends the animation smoothly
             }
         }
 
@@ -193,18 +180,15 @@ Window {
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 50 // Pushes it up slightly from the bottom edge
+            anchors.bottomMargin: 50
 
-            // Math.round() removes the decimals. Without it, the text would
-            // rapidly flicker between numbers like "61.5" and "63.0"
             text: Math.round(speedometer.value)
-            color: "white"
+            color: speedometer.value > 120 ? "#e74c3c" : "white" // Turns red over 120!
             font.pixelSize: 42
             font.bold: true
 
-            // The "km/h" label text
             Text {
-                anchors.top: parent.bottom // Anchors to the bottom of the large number
+                anchors.top: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "km/h"
                 color: "#7f8c8d"
@@ -215,4 +199,10 @@ Window {
         // Ensure the Dial listens for keyboard events immediately upon startup
         Component.onCompleted: forceActiveFocus()
     }
+
+    // --- 5. WINDOW FOCUS PROTECTOR ---
+        MouseArea {
+            anchors.fill: parent
+            onClicked: speedometer.forceActiveFocus()
+        }
 }
