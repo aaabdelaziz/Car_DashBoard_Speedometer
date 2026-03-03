@@ -148,7 +148,7 @@ Window {
                 width: 32
                 height: 32
                 radius: 16 // Radius = half of width makes a perfect circle
-                color: "#7f8c8d"
+                color: "#5C7591"
                 border.color: "#333333"
                 border.width: 2
             }
