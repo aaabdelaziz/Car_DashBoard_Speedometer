@@ -64,6 +64,46 @@ Window {
             width: speedometer.width
             height: speedometer.height
 
+
+            // Show high speed range passed
+            Canvas {
+                id: arcCanvas
+                anchors.fill: parent
+
+                onPaint: {
+                    var ctx = getContext("2d")
+                    ctx.reset()
+
+                    var centerX = width / 2
+                    var centerY = height / 2
+                    var radius = width / 2 - 5
+
+                    function degree2Rad(deg) {
+                        return deg * (Math.PI / 180)
+                    }
+
+                    // --- Background Arc (Full Track) ---
+                    ctx.beginPath()
+                    ctx.lineWidth = 20
+                    ctx.strokeStyle = "#FF0000"
+                    ctx.arc(centerX, centerY, radius,
+                            degree2Rad(-45),
+                            degree2Rad(45))
+                    ctx.stroke()
+
+                    // --- Active Speed Arc Text ---
+                    var sweep = (speedometer.value / speedometer.to) * 270
+
+                    ctx.beginPath()
+                    ctx.lineWidth = 20
+                    ctx.strokeStyle = "#FF0000"
+                    ctx.arc(centerX, centerY, radius,
+                            degree2Rad(-45),
+                            degree2Rad(-45 + sweep))
+                    ctx.stroke()
+                }
+            }
+
             // Repeater duplicates its inner components based on the 'model' number.
             // Math: We need to go from 0 to 180. If we want a tick every 2 units,
             // 180 / 2 = 90. Plus 1 for the zero tick = 91 total ticks.
