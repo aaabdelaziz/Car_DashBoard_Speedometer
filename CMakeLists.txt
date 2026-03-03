@@ -16,6 +16,7 @@ qt_add_qml_module(appCar_DashBoard_Speedometer
     URI Car_DashBoard_Speedometer
     QML_FILES
         Main.qml
+        RESOURCES Qt5_6_NoteDifferences.md
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
